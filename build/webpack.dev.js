@@ -9,7 +9,7 @@ module.exports = function (env) {
     return webpackMerge(baseConfig, {
         mode: 'development',
         devServer: { // 开发服务器
-            contentBase: resolve('../dist'),
+            contentBase: resolve('dist'),
             host: '0.0.0.0',
             useLocalIp: true,
             overlay: {
