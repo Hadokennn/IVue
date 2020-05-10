@@ -1,5 +1,7 @@
 // 存放 dev 和 prod 通用配置
-const { initConfig } = require('./bundle')
+// html插件，让插件为你生成一个HTML文件
+const HTMLWebpackPlugin = require('html-webpack-plugin')
+const { initConfig, resolve } = require('./bundle')
 const { initLoader } = require('./loader')
 
 // vue-loader 插件
@@ -12,13 +14,17 @@ const happyThreadPool = HappyPack.ThreadPool({size: os.cpus().length})
 
 const config = {
     devtool: 'inline-source-map',
-    module: {
+    module: { // 配置处理模块的规则
         rules: []
     },
-    resolve: {
+    resolve: { // 配置寻找模块的规则
         mainFields: ['jsnext:main', 'browser', 'main']
     },
-    plugins: [
+    plugins: [ // 配置扩展插件
+        // 帮助我们在 webpack 打包结束后，自动生成一个 html 文件，并把打包产生文件引入到这个 html 文件中去。
+        new HTMLWebpackPlugin({
+            template: resolve('index.html')
+        }),
         // 它的职责是将你定义过的其它规则复制并应用到 .vue 文件里相应语言的块。例如，如果你有一条匹配 /\.js$/ 的规则，那么它会应用到 .vue 文件里的 <script> 块。
         new VueLoaderPlugin(),
         new HappyPack({
@@ -42,15 +48,13 @@ module.exports = function (env) {
     const {
         entry,
         output,
-        alias,
-        htmlPlugins
+        alias
     } = initConfig(env)
     const loaders = initLoader(env)
     config.entry = entry
     config.output = output
     config.resolve.alias = alias
     config.module.rules.push(...loaders)
-    config.plugins.push(...htmlPlugins)
 
     return config
 }

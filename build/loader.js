@@ -1,3 +1,4 @@
+// webpack 开箱即用只支持 JS 和 JSON 两种文件类型，需要通过 Loaders 去支持其它文件类型并且把它们转化成有效的模块
 const {resolve} = require("./bundle")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
@@ -40,9 +41,10 @@ const fileLoader = {
         {
             loader: 'file-loader',
             options: {
-                limit: 5000,
-                // 分离图片至imgs文件夹
-                name: "imgs/[name].[ext]",
+                limit: 5000, // 文件大小 大于 limit 的时候，打包到文件夹。否则base64打包到js
+                // 分离图片至images文件夹
+                name: "[name].[ext]",
+                outputPath: 'images/'
             }
         },
     ]
